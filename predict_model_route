@@ -1,0 +1,25 @@
+from flask import Flask, render_template, request, redirect, url_for
+from predict_model import predict_model
+
+app = Flask(__name__)
+
+@app.route('/')
+def index():
+    return render_template('index.html')
+
+@app.route('/predict', methods=['POST'])
+def predict_model_route():
+    data = request.form.to_dict()
+    # Process the data and call the predict_model function
+    predictions = predict_model(data)
+    # Redirect to the result page with predictions
+    return redirect(url_for('result', predictions=predictions))
+
+@app.route('/result')
+def result():
+    # Retrieve predictions from the query parameters
+    predictions = request.args.get('predictions')
+    return render_template('result.html', predictions=predictions)
+
+if __name__ == "__main__":
+    app.run(debug=True)
